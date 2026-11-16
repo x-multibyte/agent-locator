@@ -1,0 +1,796 @@
+{
+  "description": "Complete registry of known AI coding agents and their standard directories, merged from xingkongliang/skills-manager and vercel-labs/skills.",
+  "total_agents": 87,
+  "agents": [
+    {
+      "key": "cursor",
+      "display_name": "Cursor",
+      "detect_dirs": ["~/.cursor"],
+      "global_skills_dir": "~/.cursor/skills",
+      "project_skills_dir": ".cursor/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "claude_code",
+      "display_name": "Claude Code",
+      "detect_dirs": ["~/.claude"],
+      "global_skills_dir": "~/.claude/skills",
+      "project_skills_dir": ".claude/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "omp_agent",
+      "display_name": "OMP Agent",
+      "detect_dirs": ["~/.omp/agent"],
+      "global_skills_dir": "~/.omp/agent/skills",
+      "project_skills_dir": ".omp/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "codex",
+      "display_name": "Codex",
+      "detect_dirs": ["~/.codex"],
+      "global_skills_dir": "~/.codex/skills",
+      "project_skills_dir": ".codex/skills",
+      "additional_scan_dirs": ["~/.agents/skills"],
+      "sources": ["skills-manager", "vercel-labs/skills"],
+      "alt_global_skills_dirs": ["~/.agents/skills"]
+    },
+    {
+      "key": "grok",
+      "display_name": "Grok",
+      "detect_dirs": ["~/.grok"],
+      "global_skills_dir": "~/.grok/skills",
+      "project_skills_dir": ".grok/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "opencode",
+      "display_name": "OpenCode",
+      "detect_dirs": ["~/.config/opencode"],
+      "global_skills_dir": "~/.config/opencode/skills",
+      "project_skills_dir": ".opencode/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "antigravity",
+      "display_name": "Antigravity",
+      "detect_dirs": ["~/.gemini/antigravity"],
+      "global_skills_dir": "~/.gemini/config/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "amp",
+      "display_name": "Amp",
+      "detect_dirs": ["~/.config/agents", "~/.config/amp"],
+      "global_skills_dir": "~/.config/agents/skills",
+      "project_skills_dir": ".config/agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "kilo_code",
+      "display_name": "Kilo Code",
+      "detect_dirs": ["~/.kilocode", "~/.kilo"],
+      "global_skills_dir": "~/.kilocode/skills",
+      "project_skills_dir": ".kilocode/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"],
+      "alt_global_skills_dirs": ["~/.kilo/skills"]
+    },
+    {
+      "key": "roo_code",
+      "display_name": "Roo Code",
+      "detect_dirs": ["~/.roo"],
+      "global_skills_dir": "~/.roo/skills",
+      "project_skills_dir": ".roo/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "goose",
+      "display_name": "Goose",
+      "detect_dirs": ["~/.config/goose"],
+      "global_skills_dir": "~/.config/goose/skills",
+      "project_skills_dir": ".config/goose/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "gemini_cli",
+      "display_name": "Gemini CLI",
+      "detect_dirs": ["~/.gemini"],
+      "global_skills_dir": "~/.gemini/skills",
+      "project_skills_dir": ".gemini/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "github_copilot",
+      "display_name": "GitHub Copilot",
+      "detect_dirs": ["~/.copilot"],
+      "global_skills_dir": "~/.copilot/skills",
+      "project_skills_dir": ".copilot/skills",
+      "additional_scan_dirs": ["~/.agents/skills"],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "openclaw",
+      "display_name": "OpenClaw",
+      "detect_dirs": ["~/.openclaw", "~/.clawdbot", "~/.moltbot"],
+      "global_skills_dir": "~/.openclaw/skills",
+      "project_skills_dir": ".openclaw/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"],
+      "alt_global_skills_dirs": [
+        "~/.openclaw/skills (or ~/.clawdbot/skills, ~/.moltbot/skills)"
+      ]
+    },
+    {
+      "key": "droid",
+      "display_name": "Droid",
+      "detect_dirs": ["~/.factory"],
+      "global_skills_dir": "~/.factory/skills",
+      "project_skills_dir": ".factory/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "windsurf",
+      "display_name": "Windsurf",
+      "detect_dirs": ["~/.codeium/windsurf"],
+      "global_skills_dir": "~/.codeium/windsurf/skills",
+      "project_skills_dir": ".codeium/windsurf/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "trae",
+      "display_name": "TRAE IDE",
+      "detect_dirs": ["~/.trae"],
+      "global_skills_dir": "~/.trae/skills",
+      "project_skills_dir": ".trae/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "cline",
+      "display_name": "Cline",
+      "detect_dirs": ["~/.cline"],
+      "global_skills_dir": "~/.agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "deepagents",
+      "display_name": "Deep Agents",
+      "detect_dirs": ["~/.deepagents"],
+      "global_skills_dir": "~/.deepagents/agent/skills",
+      "project_skills_dir": ".deepagents/agent/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "firebender",
+      "display_name": "Firebender",
+      "detect_dirs": ["~/.firebender"],
+      "global_skills_dir": "~/.firebender/skills",
+      "project_skills_dir": ".firebender/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "kimi",
+      "display_name": "Kimi Code CLI",
+      "detect_dirs": ["~/.kimi-code", "~/.kimi"],
+      "global_skills_dir": "~/.kimi-code/skills",
+      "project_skills_dir": ".kimi-code/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"],
+      "alt_global_skills_dirs": ["~/.agents/skills"]
+    },
+    {
+      "key": "replit",
+      "display_name": "Replit",
+      "detect_dirs": ["~/.replit"],
+      "global_skills_dir": "~/.config/agents/skills",
+      "project_skills_dir": ".config/agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "warp",
+      "display_name": "Warp",
+      "detect_dirs": ["~/.warp"],
+      "global_skills_dir": "~/.agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "augment",
+      "display_name": "Augment",
+      "detect_dirs": ["~/.augment"],
+      "global_skills_dir": "~/.augment/skills",
+      "project_skills_dir": ".augment/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "bob",
+      "display_name": "IBM Bob",
+      "detect_dirs": ["~/.bob"],
+      "global_skills_dir": "~/.bob/skills",
+      "project_skills_dir": ".bob/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "codebuddy",
+      "display_name": "CodeBuddy",
+      "detect_dirs": ["~/.codebuddy"],
+      "global_skills_dir": "~/.codebuddy/skills",
+      "project_skills_dir": ".codebuddy/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "command_code",
+      "display_name": "Command Code",
+      "detect_dirs": ["~/.commandcode"],
+      "global_skills_dir": "~/.commandcode/skills",
+      "project_skills_dir": ".commandcode/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "continue",
+      "display_name": "Continue",
+      "detect_dirs": ["~/.continue"],
+      "global_skills_dir": "~/.continue/skills",
+      "project_skills_dir": ".continue/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "cortex",
+      "display_name": "Cortex Code",
+      "detect_dirs": ["~/.snowflake/cortex"],
+      "global_skills_dir": "~/.snowflake/cortex/skills",
+      "project_skills_dir": ".snowflake/cortex/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "crush",
+      "display_name": "Crush",
+      "detect_dirs": ["~/.config/crush"],
+      "global_skills_dir": "~/.config/crush/skills",
+      "project_skills_dir": ".config/crush/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "iflow",
+      "display_name": "iFlow CLI",
+      "detect_dirs": ["~/.iflow"],
+      "global_skills_dir": "~/.iflow/skills",
+      "project_skills_dir": ".iflow/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "junie",
+      "display_name": "Junie",
+      "detect_dirs": ["~/.junie"],
+      "global_skills_dir": "~/.junie/skills",
+      "project_skills_dir": ".junie/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "kiro",
+      "display_name": "Kiro CLI",
+      "detect_dirs": ["~/.kiro"],
+      "global_skills_dir": "~/.kiro/skills",
+      "project_skills_dir": ".kiro/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "kode",
+      "display_name": "Kode",
+      "detect_dirs": ["~/.kode"],
+      "global_skills_dir": "~/.kode/skills",
+      "project_skills_dir": ".kode/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "mcpjam",
+      "display_name": "MCPJam",
+      "detect_dirs": ["~/.mcpjam"],
+      "global_skills_dir": "~/.mcpjam/skills",
+      "project_skills_dir": ".mcpjam/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "mistral_vibe",
+      "display_name": "Mistral Vibe",
+      "detect_dirs": ["~/.vibe"],
+      "global_skills_dir": "~/.vibe/skills",
+      "project_skills_dir": ".vibe/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "mux",
+      "display_name": "Mux",
+      "detect_dirs": ["~/.mux"],
+      "global_skills_dir": "~/.mux/skills",
+      "project_skills_dir": ".mux/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "neovate",
+      "display_name": "Neovate",
+      "detect_dirs": ["~/.neovate"],
+      "global_skills_dir": "~/.neovate/skills",
+      "project_skills_dir": ".neovate/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "openhands",
+      "display_name": "OpenHands",
+      "detect_dirs": ["~/.openhands"],
+      "global_skills_dir": "~/.openhands/skills",
+      "project_skills_dir": ".openhands/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "pi",
+      "display_name": "Pi",
+      "detect_dirs": ["~/.pi/agent"],
+      "global_skills_dir": "~/.pi/agent/skills",
+      "project_skills_dir": ".pi/skills",
+      "additional_scan_dirs": ["~/.agents/skills"],
+      "sources": ["skills-manager", "vercel-labs/skills"],
+      "alt_global_skills_dirs": ["~/.agents/skills"]
+    },
+    {
+      "key": "pochi",
+      "display_name": "Pochi",
+      "detect_dirs": ["~/.pochi"],
+      "global_skills_dir": "~/.pochi/skills",
+      "project_skills_dir": ".pochi/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "qoder",
+      "display_name": "Qoder",
+      "detect_dirs": ["~/.qoder"],
+      "global_skills_dir": "~/.qoder/skills",
+      "project_skills_dir": ".qoder/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "qwen_code",
+      "display_name": "Qwen Code",
+      "detect_dirs": ["~/.qwen"],
+      "global_skills_dir": "~/.qwen/skills",
+      "project_skills_dir": ".qwen/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "trae_cn",
+      "display_name": "TRAE CN",
+      "detect_dirs": ["~/.trae-cn"],
+      "global_skills_dir": "~/.trae-cn/skills",
+      "project_skills_dir": ".trae/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "zencoder",
+      "display_name": "Zencoder",
+      "detect_dirs": ["~/.zencoder"],
+      "global_skills_dir": "~/.zencoder/skills",
+      "project_skills_dir": ".zencoder/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "zcode",
+      "display_name": "ZCode",
+      "detect_dirs": ["~/.zcode", "/Applications/ZCode.app"],
+      "global_skills_dir": "~/.zcode/skills",
+      "project_skills_dir": ".zcode/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "adal",
+      "display_name": "AdaL",
+      "detect_dirs": ["~/.adal"],
+      "global_skills_dir": "~/.adal/skills",
+      "project_skills_dir": ".adal/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "hermes",
+      "display_name": "Hermes Agent",
+      "detect_dirs": ["~/.hermes"],
+      "global_skills_dir": "~/.hermes/skills",
+      "project_skills_dir": ".hermes/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "qclaw",
+      "display_name": "QClaw",
+      "detect_dirs": ["~/.qclaw"],
+      "global_skills_dir": "~/.qclaw/skills",
+      "project_skills_dir": ".qclaw/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "easyclaw",
+      "display_name": "EasyClaw",
+      "detect_dirs": ["~/.easyclaw"],
+      "global_skills_dir": "~/.easyclaw/skills",
+      "project_skills_dir": ".easyclaw/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "autoclaw",
+      "display_name": "AutoClaw",
+      "detect_dirs": ["~/.openclaw-autoclaw"],
+      "global_skills_dir": "~/.openclaw-autoclaw/skills",
+      "project_skills_dir": ".openclaw-autoclaw/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "workbuddy",
+      "display_name": "WorkBuddy",
+      "detect_dirs": ["~/.workbuddy"],
+      "global_skills_dir": "~/.workbuddy/skills",
+      "project_skills_dir": ".workbuddy/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "workbuddy_overseas",
+      "display_name": "WorkBuddy AI",
+      "detect_dirs": ["~/.workbuddy-ai"],
+      "global_skills_dir": "~/.workbuddy-ai/skills",
+      "project_skills_dir": ".workbuddy-ai/skills",
+      "additional_scan_dirs": [],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "deepseek_harness",
+      "display_name": "DeepSeek Harness",
+      "detect_dirs": ["~/.dsh"],
+      "global_skills_dir": "~/.dsh/skills",
+      "project_skills_dir": ".dsh/skills",
+      "additional_scan_dirs": ["~/.agents/skills"],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "gitlab_duo",
+      "display_name": "GitLab Duo",
+      "detect_dirs": ["~/.gitlab/duo"],
+      "global_skills_dir": "~/.gitlab/duo/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": ["~/.agents/skills"],
+      "sources": ["skills-manager"]
+    },
+    {
+      "key": "minimax_code",
+      "display_name": "MiniMax Code",
+      "detect_dirs": ["~/.minimax", "/Applications/MiniMax Code.app"],
+      "global_skills_dir": "~/.minimax/skills",
+      "project_skills_dir": ".minimax/skills",
+      "additional_scan_dirs": ["~/.agents/skills"],
+      "sources": ["skills-manager", "vercel-labs/skills"]
+    },
+    {
+      "key": "aider-desk",
+      "display_name": "AiderDesk",
+      "detect_dirs": ["~/.aider-desk"],
+      "global_skills_dir": "~/.aider-desk/skills",
+      "project_skills_dir": ".aider-desk/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "antigravity-cli",
+      "display_name": "Antigravity CLI",
+      "detect_dirs": ["~/.gemini/antigravity-cli"],
+      "global_skills_dir": "~/.gemini/config/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "astrbot",
+      "display_name": "AstrBot",
+      "detect_dirs": ["~/.astrbot"],
+      "global_skills_dir": "~/.astrbot/data/skills",
+      "project_skills_dir": "data/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "autohand-code",
+      "display_name": "Autohand Code CLI",
+      "detect_dirs": ["~/.autohand"],
+      "global_skills_dir": "~/.autohand/skills",
+      "project_skills_dir": ".autohand/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "codearts-agent",
+      "display_name": "CodeArts Agent",
+      "detect_dirs": ["~/.codeartsdoer"],
+      "global_skills_dir": "~/.codeartsdoer/skills",
+      "project_skills_dir": ".codeartsdoer/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "codemaker",
+      "display_name": "Codemaker",
+      "detect_dirs": ["~/.codemaker"],
+      "global_skills_dir": "~/.codemaker/skills",
+      "project_skills_dir": ".codemaker/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "codestudio",
+      "display_name": "Code Studio",
+      "detect_dirs": ["~/.codestudio"],
+      "global_skills_dir": "~/.codestudio/skills",
+      "project_skills_dir": ".codestudio/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "devin",
+      "display_name": "Devin for Terminal",
+      "detect_dirs": ["~/.config/devin"],
+      "global_skills_dir": "~/.config/devin/skills",
+      "project_skills_dir": ".devin/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "dexto",
+      "display_name": "Dexto",
+      "detect_dirs": ["~/.dexto"],
+      "global_skills_dir": "~/.agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "eve",
+      "display_name": "Eve",
+      "detect_dirs": [],
+      "global_skills_dir": null,
+      "project_skills_dir": "agent/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "forgecode",
+      "display_name": "ForgeCode",
+      "detect_dirs": ["~/.forge"],
+      "global_skills_dir": "~/.forge/skills",
+      "project_skills_dir": ".forge/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "fx",
+      "display_name": "fx",
+      "detect_dirs": ["~/.fx"],
+      "global_skills_dir": "~/.agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "inference-sh",
+      "display_name": "inference.sh",
+      "detect_dirs": ["~/.inferencesh"],
+      "global_skills_dir": "~/.inferencesh/skills",
+      "project_skills_dir": ".inferencesh/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "jazz",
+      "display_name": "Jazz",
+      "detect_dirs": ["~/.jazz"],
+      "global_skills_dir": "~/.jazz/skills",
+      "project_skills_dir": ".jazz/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "kimchi",
+      "display_name": "Kimchi",
+      "detect_dirs": ["~/.config/kimchi"],
+      "global_skills_dir": "~/.config/kimchi/harness/skills",
+      "project_skills_dir": ".kimchi/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "lingma",
+      "display_name": "Lingma",
+      "detect_dirs": ["~/.lingma"],
+      "global_skills_dir": "~/.lingma/skills",
+      "project_skills_dir": ".lingma/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "loaf",
+      "display_name": "Loaf",
+      "detect_dirs": ["~/.loaf"],
+      "global_skills_dir": "~/.agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "moxby",
+      "display_name": "Moxby",
+      "detect_dirs": ["~/.moxby"],
+      "global_skills_dir": "~/.moxby/skills",
+      "project_skills_dir": ".moxby/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "ona",
+      "display_name": "Ona",
+      "detect_dirs": ["~/.ona"],
+      "global_skills_dir": "~/.ona/skills",
+      "project_skills_dir": ".ona/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "posit-assistant",
+      "display_name": "Posit Assistant",
+      "detect_dirs": ["~/.posit/assistant", "~/.positai"],
+      "global_skills_dir": "~/.posit/assistant/skills",
+      "project_skills_dir": ".posit/assistant/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "qoder-cn",
+      "display_name": "Qoder CN",
+      "detect_dirs": ["~/.qoder-cn"],
+      "global_skills_dir": "~/.qoder-cn/skills",
+      "project_skills_dir": ".qoder/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "reasonix",
+      "display_name": "Reasonix",
+      "detect_dirs": ["~/.reasonix"],
+      "global_skills_dir": "~/.reasonix/skills",
+      "project_skills_dir": ".reasonix/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "rovodev",
+      "display_name": "Rovo Dev",
+      "detect_dirs": ["~/.rovodev"],
+      "global_skills_dir": "~/.rovodev/skills",
+      "project_skills_dir": ".rovodev/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "sarvam-code",
+      "display_name": "Sarvam Code",
+      "detect_dirs": ["~/.sarvam"],
+      "global_skills_dir": "~/.agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "tabnine-cli",
+      "display_name": "Tabnine CLI",
+      "detect_dirs": ["~/.tabnine"],
+      "global_skills_dir": "~/.tabnine/agent/skills",
+      "project_skills_dir": ".tabnine/agent/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "terramind",
+      "display_name": "Terramind",
+      "detect_dirs": ["~/.terramind"],
+      "global_skills_dir": "~/.terramind/skills",
+      "project_skills_dir": ".terramind/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "tinycloud",
+      "display_name": "Tinycloud",
+      "detect_dirs": ["~/.tinycloud"],
+      "global_skills_dir": "~/.tinycloud/skills",
+      "project_skills_dir": ".tinycloud/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "zed",
+      "display_name": "Zed",
+      "detect_dirs": ["~/.config/zed"],
+      "global_skills_dir": "~/.agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "zenflow",
+      "display_name": "Zenflow",
+      "detect_dirs": ["~/.zencoder"],
+      "global_skills_dir": "~/.zencoder/skills",
+      "project_skills_dir": ".zencoder/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "promptscript",
+      "display_name": "PromptScript",
+      "detect_dirs": [],
+      "global_skills_dir": null,
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    },
+    {
+      "key": "universal",
+      "display_name": "Universal",
+      "detect_dirs": [],
+      "global_skills_dir": "~/.config/agents/skills",
+      "project_skills_dir": ".agents/skills",
+      "additional_scan_dirs": [],
+      "sources": ["vercel-labs/skills"]
+    }
+  ]
+}

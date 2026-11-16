@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-tools-scan-result-schema.json",
+  "title": "Agent Tools Scan Result",
+  "description": "Schema for agent-tools-scan-result.json — local machine read-only scan results against agent-tools.json plus unlisted local agent-related directories.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scanned_at",
+    "host",
+    "registry_ref",
+    "summary",
+    "installed_agents",
+    "not_installed_keys",
+    "unlisted_local_dirs"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version of this scan result file."
+    },
+    "scanned_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "examples": ["2026-11-16T19:31:48+08:00"],
+      "description": "RFC 3339 (section 5.6) date-time timestamp when the scan ran."
+    },
+    "scan_duration": {
+      "type": "string",
+      "format": "duration",
+      "examples": ["PT0.12S"],
+      "description": "ISO 8601 duration of the scan execution."
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hostname", "os", "home_dir"],
+      "properties": {
+        "hostname": {
+          "type": "string",
+          "format": "hostname",
+          "minLength": 1
+        },
+        "os": {
+          "type": "string",
+          "minLength": 1
+        },
+        "home_dir": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "registry_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "updated_at", "total"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path to the agent-tools.json registry used for this scan."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+          "examples": ["2026-11-16T19:31:48+08:00"],
+          "description": "RFC 3339 (section 5.6) date-time timestamp copied from the referenced agent-tools.json."
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total agent count in the referenced registry."
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_checked",
+        "installed_count",
+        "not_installed_count",
+        "unlisted_local_count"
+      ],
+      "properties": {
+        "total_checked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "installed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_installed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unlisted_local_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "installed_agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/scannedAgent"
+      },
+      "description": "Known agents from agent-tools.json detected on this machine."
+    },
+    "not_installed_keys": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Keys from agent-tools.json not detected on this machine."
+    },
+    "unlisted_local_dirs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unlistedDir"
+      },
+      "description": "Local agent-related directories (e.g. repos, skill libraries, infra) not covered by agent-tools.json."
+    }
+  },
+  "$defs": {
+    "pathEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configured_path",
+        "resolved_path",
+        "exists",
+        "kind",
+        "symlink_target"
+      ],
+      "properties": {
+        "configured_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolved_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exists": {
+          "type": "boolean"
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["dir", "file", "symlink", "missing"]
+        },
+        "symlink_target": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "skillsDirEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configured_path",
+        "resolved_path",
+        "exists",
+        "kind",
+        "symlink_target",
+        "skills_count",
+        "skills"
+      ],
+      "properties": {
+        "configured_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolved_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exists": {
+          "type": "boolean"
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["dir", "file", "symlink", "missing"]
+        },
+        "symlink_target": {
+          "type": ["string", "null"]
+        },
+        "skills_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "scannedAgent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "display_name", "detect_hits", "skills_dirs"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detect_hits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathEntry"
+          }
+        },
+        "skills_dirs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/skillsDirEntry"
+          }
+        }
+      }
+    },
+    "unlistedDir": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "resolved_path",
+        "kind",
+        "symlink_target",
+        "classification",
+        "notes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolved_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["dir", "symlink"]
+        },
+        "symlink_target": {
+          "type": ["string", "null"]
+        },
+        "classification": {
+          "type": "string",
+          "enum": [
+            "agent_runtime",
+            "agent_repo",
+            "skills_library",
+            "agent_infra",
+            "other"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
