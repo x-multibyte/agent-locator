@@ -7,6 +7,84 @@
       "sourceType": "github",
       "skillPath": "skills/beautify-github-readme/SKILL.md",
       "computedHash": "96f56e19f4c567827b078229f0285c1e219278f69e5832c9823eca7f519cc8fe"
+    },
+    "context7-cli": {
+      "source": "upstash/context7",
+      "commit": "27ef14ca41a57563891135cad663732d43203a8b",
+      "sourceType": "github",
+      "skillPath": "skills/context7-cli/SKILL.md",
+      "computedHash": "5a6ba15f495ff7b14b2b0bbf48b67e89e025f4d08a27e1d6ba64a1e9fb31af58"
+    },
+    "context7-mcp": {
+      "source": "upstash/context7",
+      "commit": "27ef14ca41a57563891135cad663732d43203a8b",
+      "sourceType": "github",
+      "skillPath": "skills/context7-mcp/SKILL.md",
+      "computedHash": "d146f6e0db2c9aeefa744c47f1e0d78daa5fe27bbb3e264e88baa7bd12f760c5"
+    },
+    "draw-ui": {
+      "source": "oil-oil/draw-ui",
+      "commit": "e4e03662144ae94ed1140811d054f2a3b255e3e4",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "7b97522178d73735e68240d60f03a2be3f86707b1a93523018e8be4fd171e9cb"
+    },
+    "find-docs": {
+      "source": "upstash/context7",
+      "commit": "27ef14ca41a57563891135cad663732d43203a8b",
+      "sourceType": "github",
+      "skillPath": "skills/find-docs/SKILL.md",
+      "computedHash": "2f042e7e9711a2a720b595083eb13c7f06380e6557f2eb689ce3182d4380e39d"
+    },
+    "find-skills": {
+      "source": "oil-oil/skills",
+      "commit": "88b9564832a2cdb607a3dc6d8797a11a61b15a08",
+      "sourceType": "github",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "bad9884f0a4a7e827bf677c4b63e04053b2290c6671954fcb5a6cae692c5a13f"
+    },
+    "git-ship": {
+      "source": "oil-oil/git-ship",
+      "commit": "acd9900cc89d17aab6e391c94166c82fc62a51ed",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "014ea33aa40766f21fdbf419c5d51498c7c1b6dd3dde4123cf84bc486f65b1db"
+    },
+    "oil-bug-fix": {
+      "source": "oil-oil/oil-dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/oil-bug-fix/SKILL.md",
+      "computedHash": "ad344855afcaacfb2e8bf7c0bd50c1bbe52d7b3d80eb2807df31263f0a09f843"
+    },
+    "oil-code-review": {
+      "source": "oil-oil/oil-dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/oil-code-review/SKILL.md",
+      "computedHash": "4d65f501c01e96ab7e6a2f52f65c44cfaf0389c662877ba5bd6db1ed459f836e"
+    },
+    "oil-delegate": {
+      "source": "oil-oil/oil-dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/oil-delegate/SKILL.md",
+      "computedHash": "93f32b2ff80497e496e439075ea4d7f01513273b567ec465cdebe3eef7527489"
+    },
+    "oil-explore": {
+      "source": "oil-oil/oil-dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/oil-explore/SKILL.md",
+      "computedHash": "f6ce0ffbfdb5408a6bf5c93cddf1a74a0920cd6d155fb9a7928478c62222a6a3"
+    },
+    "oil-govern": {
+      "source": "oil-oil/oil-dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/oil-govern/SKILL.md",
+      "computedHash": "85e51264aa764eb8ec70b9ab7b653eee73e151b70737f1e69dddb8a09a1cf54a"
+    },
+    "oil-plan": {
+      "source": "oil-oil/oil-dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/oil-plan/SKILL.md",
+      "computedHash": "4cd597984f0503099914e7ba0da4e2e7ddbc6c6ff76a112ad780670e105ae989"
     }
   }
 }

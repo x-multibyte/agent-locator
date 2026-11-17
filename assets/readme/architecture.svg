@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="330" viewBox="0 0 1200 330"
+     role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">Agent Locator Architecture and Skill Sync Flow</title>
+  <desc id="arch-desc">Three-stage architecture: Universal Registry (agent-tools.json with 87 agents) feeds the Rust napi-rs Core and Central Hub (~/.agent-locator/skills), which distributes skills via symlink or copy to installed agents and surfaces status in the Ink TUI and CLI.</desc>
+
+  <!-- Canvas -->
+  <rect width="1200" height="330" rx="20" fill="#0B0F14"/>
+  <rect x="1" y="1" width="1198" height="328" rx="19" fill="none" stroke="#243041" stroke-width="1.5"/>
+
+  <!-- Connectors -->
+  <path d="M 358 165 L 414 165" stroke="#38BDF8" stroke-width="2.5" fill="none"/>
+  <polygon points="414,159 426,165 414,171" fill="#38BDF8"/>
+
+  <path d="M 774 165 L 830 165" stroke="#34D399" stroke-width="2.5" fill="none"/>
+  <polygon points="830,159 842,165 830,171" fill="#34D399"/>
+
+  <!-- Stage 1: Registry -->
+  <g id="stage-registry" transform="translate(44 44)">
+    <rect x="0" y="0" width="314" height="242" rx="12" fill="#121923" stroke="#243041" stroke-width="1.5"/>
+    <rect x="20" y="20" width="136" height="28" rx="6" fill="#132233"/>
+    <text x="88" y="39" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="16" font-weight="600" fill="#38BDF8">1. REGISTRY</text>
+
+    <text x="20" y="82" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#F0F6FC">Static Spec</text>
+    <text x="20" y="116" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="18" fill="#7DD3FC">agent-tools.json</text>
+
+    <line x1="20" y1="136" x2="294" y2="136" stroke="#1E293B" stroke-width="1"/>
+
+    <text x="20" y="166" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• 87 deduplicated agents</text>
+    <text x="20" y="196" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• Portable ~ detect paths</text>
+    <text x="20" y="226" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• JSON Schema 2020-12</text>
+  </g>
+
+  <!-- Stage 2: Rust Core & Central Hub -->
+  <g id="stage-core" transform="translate(428 44)">
+    <rect x="0" y="0" width="346" height="242" rx="12" fill="#121923" stroke="#1E3A5F" stroke-width="1.5"/>
+    <rect x="20" y="20" width="164" height="28" rx="6" fill="#132233"/>
+    <text x="102" y="39" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="16" font-weight="600" fill="#38BDF8">2. NATIVE CORE</text>
+
+    <text x="20" y="82" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#F0F6FC">Rust (napi-rs) + Hub</text>
+    <text x="20" y="116" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="18" fill="#7DD3FC">~/.agent-locator/skills</text>
+
+    <line x1="20" y1="136" x2="326" y2="136" stroke="#1E293B" stroke-width="1"/>
+
+    <text x="20" y="166" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• Async filesystem probe</text>
+    <text x="20" y="196" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• SHA-256 drift detection</text>
+    <text x="20" y="226" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• State in skills-lock.json</text>
+  </g>
+
+  <!-- Stage 3: Distribution & UI -->
+  <g id="stage-targets" transform="translate(844 44)">
+    <rect x="0" y="0" width="312" height="242" rx="12" fill="#121923" stroke="#1B4332" stroke-width="1.5"/>
+    <rect x="20" y="20" width="166" height="28" rx="6" fill="#102A22"/>
+    <text x="103" y="39" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="16" font-weight="600" fill="#34D399">3. SYNC &amp; INTERFACES</text>
+
+    <text x="20" y="82" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#F0F6FC">Agents &amp; TUI / CLI</text>
+    <text x="20" y="116" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="18" fill="#6EE7B7">symlink | copy</text>
+
+    <line x1="20" y1="136" x2="292" y2="136" stroke="#1E293B" stroke-width="1"/>
+
+    <text x="20" y="166" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• Ink TUI 3-tab dashboard</text>
+    <text x="20" y="196" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• agloc CLI &amp; --json output</text>
+    <text x="20" y="226" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="19" fill="#C9D1D9">• Schema-validated JSON</text>
+  </g>
+</svg>

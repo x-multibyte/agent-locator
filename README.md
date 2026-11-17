@@ -1,51 +1,135 @@
-# Agent Locator
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="Agent Locator (agloc) — Detect 87 AI coding agents and manage skills from a central hub via symlink or copy">
+</p>
 
-A structured specification and registry for identifying AI coding agent tools, their standard configuration paths, and their skills directories across a host machine.
+# Agent Locator (`agloc`)
 
-## Overview
+**Detect installed AI coding agents on your machine and manage their skills from one central hub (`~/.agent-locator/skills`) using `symlink` or `copy` mode.**
 
-This directory defines a strict separation between:
+Built with a **Rust (`napi-rs`)** native filesystem & hashing core and a **TypeScript (`Ink` + `citty`)** CLI and interactive TUI, backed by a static, schema-validated registry of **87 known AI coding agents** ([`agent-tools.json`](./agent-tools.json)).
 
-1. **Universal Agent Registry (`agent-tools.json`)**: A static, host-independent catalog of all known AI coding agents and their standard directory conventions. No local machine state or presence assumptions are stored here.
-2. **Local Scan Results (`agent-tools-scan-result.json`, pending execution)**: Read-only probe output for a specific host, referencing `agent-tools.json` and recording detected installations, symlink targets, skill counts, and unlisted local agent-related directories.
+---
 
-## Upstream Sources
+## Quick Start
 
-The universal registry merges two upstream agent registries (87 unique agents total, deduplicated by normalized key and display name):
+### 1. Build from source
 
-- [xingkongliang/skills-manager](https://github.com/xingkongliang/skills-manager) (`src-tauri/src/core/tool_adapters.rs` — 56 agents)
-- [vercel-labs/skills](https://github.com/vercel-labs/skills) (`src/agents.ts` — 79 agents)
+Requires **Node.js** and a **Rust toolchain** (`cargo`).
 
-All upstream entries are preserved regardless of whether they exist on the local machine.
+```bash
+npm install
+npm run build
+```
 
-## File Inventory
+This compiles the Rust native addon (`agent-locator.node`) and TypeScript CLI (`dist/index.js`).
 
-| File                                  | Purpose                                                        |
-| :------------------------------------ | :------------------------------------------------------------- |
-| `README.md`                           | Project overview, design decisions, and file inventory         |
-| `agent-tools.json`                    | Universal static registry of 87 known AI coding agents         |
-| `agent-tools-schema.json`             | JSON Schema (Draft 2020-12) for `agent-tools.json`             |
-| `agent-tools-scan-result-schema.json` | JSON Schema (Draft 2020-12) for `agent-tools-scan-result.json` |
-| `known-agents.json`                   | Initial merged registry snapshot (87 agents)                   |
-| `known-agents.md`                     | Human-readable Markdown table of all 87 known agents           |
-| `known-agents-schema.json`            | JSON Schema (Draft 2020-12) for `known-agents.json`            |
+### 2. Scan your machine
 
-## Schema Design Decisions
+```bash
+# Run a read-only host scan (validates output against JSON Schema Draft 2020-12)
+node dist/index.js scan
 
-- **Separation of Concerns**: Universal definitions (`agent-tools.json`) never contain host-specific flags such as `installed: true/false`. Host-specific findings belong exclusively in `agent-tools-scan-result.json`.
-- **Array-Based Provenance and Paths**: `sources`, `detect_paths`, `global_skills_dirs`, and `additional_scan_dirs` are arrays so multi-source provenance and multi-path/fallback conventions (e.g., OpenClaw legacy paths or Codex shared `~/.agents/skills`) are preserved without truncation.
-- **Portable Paths vs. Resolved Paths**: Universal registries use `~` placeholders; scan results record both `configured_path` and `resolved_path`, along with `kind` (`dir`, `file`, `symlink`, `missing`) and `symlink_target`.
-- **Dates, Times, and Host Formats**: Aligned with [JSON Schema Dates and Times](https://json-schema.org/understanding-json-schema/reference/type#dates-and-times):
-  - Timestamps (`updated_at`, `scanned_at`) use `format: "date-time"` (RFC 3339, section 5.6) paired with a regex `pattern` and `examples` so both format-asserting and annotation-only validators enforce valid timestamps.
-  - Scan duration (`scan_duration`) uses `format: "duration"` (ISO 8601 ABNF duration, e.g., `PT0.12S`).
-  - Hostname (`host.hostname`) uses `format: "hostname"` (RFC 1123).
-- **Compact Non-Installed Tracking**: In `agent-tools-scan-result.json`, agents not found on the host are recorded as a `not_installed_keys` string array rather than 87 verbose empty objects.
+# Or launch the interactive 3-tab Ink TUI dashboard
+node dist/index.js
+```
 
-## Planned Scan Scope (Not Yet Executed)
+> If linked globally (`npm link`), use `agloc` or `agent-locator` directly in place of `node dist/index.js`.
 
-When triggered, the read-only scan will:
+Example `scan` output:
 
-1. Check every `detect_paths` and `global_skills_dirs` entry in `agent-tools.json`, resolving symlinks and counting skills.
-2. Inspect top-level `~/.*` and `~/.config/*` directories plus visible agent-related directories under `~/` (repositories, skill libraries, routers, memory services, MCP servers) to populate `unlisted_local_dirs`.
-3. Exclude recursive scans of `~/Library/` and deep workspace trees (`~/dev/`, `~/workspace/`, etc.) to avoid noise.
-4. Output `agent-tools-scan-result.json` and validate it against `agent-tools-scan-result-schema.json`.
+```text
+Agent Locator Scan Summary
+Host: workstation (linux) | Home: /home/user
+Checked: 87 | Installed: 2 | Not installed: 85 | Duration: PT0S
+
+● Gemini CLI (gemini_cli) — 0 skills [~/.gemini]
+    ~/.gemini/skills: missing
+● Antigravity CLI (antigravity-cli) — 0 skills [~/.gemini/antigravity-cli]
+    ~/.gemini/config/skills: missing
+```
+
+---
+
+## How It Works
+
+<p align="center">
+  <img src="./assets/readme/architecture.svg" width="100%" alt="Agent Locator architecture: Universal Registry feeds Rust napi-rs core and central hub, syncing skills via symlink or copy to target agents and Ink TUI">
+</p>
+
+1. **Universal Agent Registry ([`agent-tools.json`](./agent-tools.json))**: A host-independent catalog of **87 deduplicated AI coding agents** merged from [`xingkongliang/skills-manager`](https://github.com/xingkongliang/skills-manager) (56 agents) and [`vercel-labs/skills`](https://github.com/vercel-labs/skills) (79 agents). Uses portable `~` paths and never stores local machine state.
+2. **Rust Native Core (`rust/`)**: Probes `detect_paths` and `global_skills_dirs` asynchronously via `tokio` + `napi-rs`, resolves symlinks, computes SHA-256 content hashes for skill directories, and records managed state.
+3. **Central Skill Hub (`~/.agent-locator/skills`)**: Stores canonical skill folders once, then distributes them to any installed agent as either a **symlink** or a **copy**, while `doctor` detects broken links, drifted copies, unmanaged agent skills, and missing `SKILL.md` files.
+
+---
+
+## CLI Reference
+
+### Interactive TUI
+
+```bash
+agloc            # Launch TUI (default when no subcommand is passed)
+agloc tui        # Explicit TUI subcommand
+```
+
+TUI views & shortcuts: `[1]` Agents Overview · `[2]` Skills Matrix · `[3]` Doctor · `Tab` switch view · `r` refresh · `q` quit.
+
+### Scanning & Agent Inspection
+
+```bash
+agloc scan                          # Human-readable host scan summary
+agloc scan --json                   # Full scan result JSON to stdout
+agloc scan -o scan-result.json      # Save & validate against agent-tools-scan-result-schema.json
+
+agloc agents list                   # List installed agents
+agloc agents list --all             # List all 87 known agents
+agloc agents list -c coding --json  # Filter by category and output JSON
+agloc agents info claude_code       # Inspect detect paths, symlinks, and skills for an agent
+```
+
+### Skill Hub & Distribution
+
+```bash
+# List central-hub and unmanaged agent skills with sync status
+agloc skills list
+agloc skills list --agent cursor --json
+
+# Add a local skill folder to ~/.agent-locator/skills and distribute immediately
+agloc skills add ./my-skill --to claude_code,cursor -m symlink
+agloc skills add ./my-skill --to all -m copy
+
+# Import existing unmanaged skills from agents into the central hub
+agloc skills import --from claude_code --skill my-skill -m symlink
+agloc skills import --all -m symlink
+
+# Distribute, remove, sync, and repair
+agloc skills link my-skill --to claude_code,codex
+agloc skills copy my-skill --to cursor
+agloc skills remove my-skill --from codex
+agloc skills sync
+agloc skills doctor                 # Check for broken symlinks, drifted copies, missing SKILL.md
+agloc skills doctor --fix           # Auto-repair fixable issues
+```
+
+---
+
+## Repository Layout & Schemas
+
+| Path | Role |
+| :--- | :--- |
+| [`rust/`](./rust) | Rust `napi-rs` native core (`scanner.rs`, `skills.rs`, `state.rs`, `models.rs`) |
+| [`src/`](./src) | TypeScript CLI (`commands/`), Ink TUI (`tui/`), and native bindings (`native.ts`) |
+| [`agent-tools.json`](./agent-tools.json) | Universal static registry of 87 known AI coding agents |
+| [`agent-tools-schema.json`](./agent-tools-schema.json) | JSON Schema (Draft 2020-12) for `agent-tools.json` |
+| [`agent-tools-scan-result-schema.json`](./agent-tools-scan-result-schema.json) | JSON Schema (Draft 2020-12) for host scan results (`date-time`, `duration`, `hostname`) |
+| [`known-agents.md`](./known-agents.md) | Human-readable table of all 87 known agents |
+| [`known-agents.json`](./known-agents.json) / [`known-agents-schema.json`](./known-agents-schema.json) | Initial merged registry snapshot and its Draft 2020-12 schema |
+
+---
+
+## Development & Testing
+
+```bash
+npm run build:rust   # Build Rust cdylib and copy .node binary
+npm run build:ts     # Compile TypeScript to dist/
+npm test             # Run Cargo tests and Node CLI/TUI tests
+```
