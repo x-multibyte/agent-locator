@@ -10,12 +10,13 @@
   "files": [
     "dist",
     "agent-locator.node",
+    "agent-locator.*.node",
     "agent-tools.json",
     "agent-tools-schema.json",
     "agent-tools-scan-result-schema.json"
   ],
   "scripts": {
-    "build:rust": "cargo build --release && (cp target/release/libagent_locator_native.so ./agent-locator.node 2>/dev/null || cp target/release/libagent_locator_native.dylib ./agent-locator.node)",
+    "build:rust": "cargo build --release && node scripts/copy-native.mjs",
     "build:ts": "tsc",
     "build": "npm run build:rust && npm run build:ts",
     "start": "node dist/index.js",

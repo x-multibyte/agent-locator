@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -173,7 +174,12 @@ interface NativeBindings {
 }
 
 const require = createRequire(import.meta.url);
-const addonPath = path.join(PACKAGE_ROOT, "agent-locator.node");
+const platformAddonPath = path.join(
+  PACKAGE_ROOT,
+  `agent-locator.${process.platform}-${process.arch}.node`
+);
+const defaultAddonPath = path.join(PACKAGE_ROOT, "agent-locator.node");
+const addonPath = fs.existsSync(platformAddonPath) ? platformAddonPath : defaultAddonPath;
 const native = require(addonPath) as NativeBindings;
 
 function resolveRegistry(registryPath?: string): string | undefined {

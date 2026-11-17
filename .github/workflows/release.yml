@@ -1,0 +1,197 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (e.g. v0.1.0). Leave empty for dry-run packaging."
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build-matrix:
+    name: Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux-x64
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            node_file: agent-locator.linux-x64.node
+            run_tests: true
+          - platform: linux-arm64
+            os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            node_file: agent-locator.linux-arm64.node
+            run_tests: true
+          - platform: darwin-arm64
+            os: macos-14
+            target: aarch64-apple-darwin
+            node_file: agent-locator.darwin-arm64.node
+            run_tests: true
+          - platform: darwin-x64
+            os: macos-14
+            target: x86_64-apple-darwin
+            node_file: agent-locator.darwin-x64.node
+            run_tests: false
+          - platform: win32-x64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            node_file: agent-locator.win32-x64.node
+            run_tests: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build Rust native addon (${{ matrix.target }})
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Copy native addon binary
+        run: node scripts/copy-native.mjs ${{ matrix.target }} ${{ matrix.node_file }}
+
+      - name: Build TypeScript CLI & TUI
+        run: npm run build:ts
+
+      - name: Run unit & integration tests
+        if: ${{ matrix.run_tests }}
+        run: npm test
+
+      - name: Package platform archive
+        shell: bash
+        run: |
+          tar -czf "agent-locator-${{ matrix.platform }}.tar.gz" \
+            dist \
+            agent-locator.node \
+            "${{ matrix.node_file }}" \
+            agent-tools.json \
+            agent-tools-schema.json \
+            agent-tools-scan-result-schema.json \
+            package.json \
+            README.md
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            ${{ matrix.node_file }}
+            agent-locator-${{ matrix.platform }}.tar.gz
+
+  publish-release:
+    name: Package & Publish Release
+    needs: build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Download platform artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: release-artifacts
+          merge-multiple: true
+
+      - name: Install npm dependencies & build TypeScript
+        run: |
+          cp release-artifacts/agent-locator.*.node .
+          npm ci
+          npm run build:ts
+
+      - name: Determine release tag & sync package version
+        id: meta
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            TAG="${{ inputs.tag }}"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          if [ -n "$TAG" ]; then
+            VERSION="${TAG#v}"
+            npm version "$VERSION" --no-git-tag-version --allow-same-version
+          fi
+
+      - name: Pack universal npm tarball
+        run: npm pack --pack-destination release-artifacts
+
+      - name: Generate SHA256 checksums
+        shell: bash
+        run: |
+          cd release-artifacts
+          sha256sum agent-locator* > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Upload combined release package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-bundle
+          path: release-artifacts/*
+
+      - name: Create or update GitHub Release
+        if: ${{ steps.meta.outputs.tag != '' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" release-artifacts/* --clobber
+          else
+            gh release create "$RELEASE_TAG" release-artifacts/* \
+              --title "Agent Locator $RELEASE_TAG" \
+              --generate-notes
+          fi
+
+      - name: Publish to npm Registry (when NPM_TOKEN is configured)
+        if: ${{ steps.meta.outputs.tag != '' }}
+        shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::notice::NPM_TOKEN secret is not configured; skipping npm publish."
+            exit 0
+          fi
+          npm publish --access public
