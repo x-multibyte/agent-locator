@@ -225,3 +225,96 @@ test("Ink TUI renders dashboard tabs cleanly", async () => {
     assert.ok(output.includes("Claude Code"));
   });
 });
+
+test("SkillsMatrixView bounds terminal height with 60 agents and 100 long skills", async () => {
+  const installedAgents = Array.from({ length: 60 }, (_, idx) => ({
+    key: `agent_${idx}`,
+    displayName: `Agent Number ${idx}`,
+    category: "coding",
+    primarySkillsDir: `/tmp/.agent_${idx}/skills`,
+    skillsDirs: [`/tmp/.agent_${idx}/skills`],
+    detectHits: [`/tmp/.agent_${idx}`],
+    skillsCount: 1,
+  }));
+
+  const skills = Array.from({ length: 100 }, (_, idx) => ({
+    id:
+      idx === 0
+        ? "software-development/very-long-nested-skill-specification-compliance-name"
+        : `category-${idx % 5}/skill-item-${idx}`,
+    name: idx === 0 ? "Skill Creator With Long Title" : `Skill ${idx}`,
+    description:
+      "Line one of a very long multi-line description\nLine two that would otherwise wrap and stretch the terminal panel past bounds.",
+    hasSkillMd: true,
+    contentHash: "abc123",
+    inCentralHub: idx % 2 === 0,
+    centralPath: idx % 2 === 0 ? `/tmp/.agent-locator/skills/s${idx}` : null,
+    placements: [],
+  }));
+
+  const fakeData = {
+    scan: {
+      schema_version: "1.0",
+      scanned_at: "2026-11-17T00:00:00Z",
+      host: { hostname: "test", os: "linux", home_dir: "/tmp" },
+      registry_ref: { path: "agent-tools.json", updated_at: "2026-11-17T00:00:00Z", total: 87 },
+      summary: {
+        total_checked: 87,
+        installed_count: 60,
+        not_installed_count: 27,
+        unlisted_local_count: 0,
+      },
+      installed_agents: [],
+      not_installed_keys: [],
+      unlisted_local_dirs: [],
+    },
+    matrix: {
+      centralHubDir: "/tmp/.agent-locator/skills",
+      stateFilePath: "/tmp/.agent-locator/state.json",
+      installedAgents,
+      allAgents: [],
+      skills,
+    },
+    doctor: {
+      healthy: true,
+      totalIssues: 0,
+      fixedCount: 0,
+      issues: [],
+    },
+  };
+
+  const chunks: string[] = [];
+  const stdout = new PassThrough();
+  Object.assign(stdout, { columns: 120, rows: 28, isTTY: false });
+  stdout.on("data", (chunk) => chunks.push(chunk.toString("utf8")));
+
+  const stdin = new PassThrough();
+  Object.assign(stdin, { isTTY: false, setRawMode: () => {} });
+
+  const instance = render(
+    React.createElement(App, {
+      initialData: fakeData,
+      initialTab: "skills",
+      disableExitOnQ: true,
+    }),
+    {
+      stdout: stdout as unknown as NodeJS.WriteStream,
+      stdin: stdin as unknown as NodeJS.ReadStream,
+      debug: true,
+    }
+  );
+
+  await new Promise((r) => setTimeout(r, 50));
+  instance.unmount();
+
+  const lastFrame =
+    chunks.filter((c) => c.includes("Agent Locator")).pop() ?? chunks.join("");
+  const lines = lastFrame.replace(/\r\n/g, "\n").split("\n");
+  assert.ok(
+    lines.length <= 30,
+    `Expected rendered frame lines <= 30 for 28-row terminal, got ${lines.length} (total chunks=${chunks.length}):\n${lastFrame}`
+  );
+  assert.ok(lastFrame.includes("1/60 · 第 1/"), "Expected paginated agent counter 1/60 · 第 1/");
+  assert.ok(lastFrame.includes("1/100) · 第 1/"), "Expected paginated skill counter 1/100 · 第 1/");
+  assert.ok(!lastFrame.includes("Agent Number 59"), "Expected bottom agents to be paginated off-screen");
+});

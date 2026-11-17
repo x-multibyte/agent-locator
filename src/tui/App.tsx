@@ -18,22 +18,24 @@ export interface AppData {
   doctor: DoctorReport;
 }
 
+type TabKey = "agents" | "skills" | "doctor";
+
 interface AppProps {
   registryPath?: string;
   initialData?: AppData;
+  initialTab?: TabKey;
   disableExitOnQ?: boolean;
 }
-
-type TabKey = "agents" | "skills" | "doctor";
 
 export const App: React.FC<AppProps> = ({
   registryPath,
   initialData,
+  initialTab = "agents",
   disableExitOnQ = false,
 }) => {
   const { exit } = useApp();
   const { isRawModeSupported } = useStdin();
-  const [activeTab, setActiveTab] = useState<TabKey>("agents");
+  const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
   const [data, setData] = useState<AppData | null>(initialData ?? null);
   const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState<string | null>(null);

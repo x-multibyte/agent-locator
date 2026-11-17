@@ -15,27 +15,30 @@ const candidateDirs = [
   path.join(ROOT, "target", "release"),
 ];
 
-const candidateNames = [
-  "libagent_locator_native.so",
-  "libagent_locator_native.dylib",
-  "agent_locator_native.dll",
-];
+function resolveExpectedLibName(triple, platform) {
+  if (triple.includes("apple-darwin") || (!triple && platform === "darwin")) {
+    return "libagent_locator_native.dylib";
+  }
+  if (triple.includes("windows") || (!triple && platform === "win32")) {
+    return "agent_locator_native.dll";
+  }
+  return "libagent_locator_native.so";
+}
+
+const expectedName = resolveExpectedLibName(targetTriple, process.platform);
 
 let sourceFile = "";
 for (const dir of candidateDirs) {
-  for (const name of candidateNames) {
-    const full = path.join(dir, name);
-    if (fs.existsSync(full)) {
-      sourceFile = full;
-      break;
-    }
+  const full = path.join(dir, expectedName);
+  if (fs.existsSync(full)) {
+    sourceFile = full;
+    break;
   }
-  if (sourceFile) break;
 }
 
 if (!sourceFile) {
   console.error(
-    `Could not find built Rust cdylib in:\n${candidateDirs.map((d) => `  - ${d}`).join("\n")}`
+    `Could not find '${expectedName}' in:\n${candidateDirs.map((d) => `  - ${d}`).join("\n")}`
   );
   process.exit(1);
 }
