@@ -35,12 +35,12 @@ jobs:
             node_file: agent-locator.linux-arm64.node
             run_tests: true
           - platform: darwin-arm64
-            os: macos-14
+            os: macos-latest
             target: aarch64-apple-darwin
             node_file: agent-locator.darwin-arm64.node
             run_tests: true
           - platform: darwin-x64
-            os: macos-14
+            os: macos-latest
             target: x86_64-apple-darwin
             node_file: agent-locator.darwin-x64.node
             run_tests: false
