@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Text, useInput, useStdin } from "ink";
+import { Box, Text, useInput, useStdin, useStdout } from "ink";
 import {
   distributeSkill,
   importSkill,
@@ -15,8 +15,6 @@ interface SkillsMatrixViewProps {
   onStatus: (msg: string) => void;
 }
 
-const WINDOW_SIZE = 12;
-
 export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
   matrix,
   isActive,
@@ -24,11 +22,17 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
   onStatus,
 }) => {
   const { isRawModeSupported } = useStdin();
+  const { stdout } = useStdout();
   const [focusPane, setFocusPane] = useState<"skills" | "agents">("skills");
   const [skillIndex, setSkillIndex] = useState(0);
   const [agentIndex, setAgentIndex] = useState(0);
   const [defaultMode, setDefaultMode] = useState<"symlink" | "copy">("symlink");
   const [busy, setBusy] = useState(false);
+
+  const termRows = stdout?.rows ?? 28;
+  const paneHeight = Math.max(14, Math.min(22, termRows - 14));
+  const skillPageSize = Math.max(6, paneHeight - 3);
+  const agentPageSize = Math.max(5, paneHeight - 7);
 
   const skills = matrix.skills;
   const agents = matrix.installedAgents;
@@ -77,6 +81,10 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
           setSkillIndex((prev) => (prev > 0 ? prev - 1 : skills.length - 1));
         } else if (key.downArrow || input === "j") {
           setSkillIndex((prev) => (prev + 1) % skills.length);
+        } else if (key.pageUp || input === "[") {
+          setSkillIndex((prev) => Math.max(0, prev - skillPageSize));
+        } else if (key.pageDown || input === "]") {
+          setSkillIndex((prev) => Math.min(skills.length - 1, prev + skillPageSize));
         } else if (input === "i" && selectedSkill && !selectedSkill.inCentralHub) {
           const sourcePlacement = selectedSkill.placements.find(
             (p) => p.status === "unmanaged"
@@ -103,6 +111,10 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
         setAgentIndex((prev) => (prev > 0 ? prev - 1 : agents.length - 1));
       } else if (key.downArrow || input === "j") {
         setAgentIndex((prev) => (prev + 1) % agents.length);
+      } else if (key.pageUp || input === "[") {
+        setAgentIndex((prev) => Math.max(0, prev - agentPageSize));
+      } else if (key.pageDown || input === "]") {
+        setAgentIndex((prev) => Math.min(agents.length - 1, prev + agentPageSize));
       } else if (input === " ") {
         const placement = selectedSkill.placements.find(
           (p) => p.agentKey === selectedAgent.key
@@ -169,22 +181,28 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
     { isActive: isActive && Boolean(isRawModeSupported) }
   );
 
-  const skillStart = Math.max(
-    0,
-    Math.min(
-      safeSkillIdx - Math.floor(WINDOW_SIZE / 2),
-      Math.max(0, skills.length - WINDOW_SIZE)
-    )
-  );
-  const visibleSkills = skills.slice(skillStart, skillStart + WINDOW_SIZE);
+  const skillPage = Math.floor(safeSkillIdx / skillPageSize);
+  const skillTotalPages = Math.max(1, Math.ceil(skills.length / skillPageSize));
+  const skillStart = skillPage * skillPageSize;
+  const visibleSkills = skills.slice(skillStart, skillStart + skillPageSize);
+
+  const agentPage = Math.floor(safeAgentIdx / agentPageSize);
+  const agentTotalPages = Math.max(1, Math.ceil(agents.length / agentPageSize));
+  const agentStart = agentPage * agentPageSize;
+  const visibleAgents = agents.slice(agentStart, agentStart + agentPageSize);
+
+  const normalizedDesc = selectedSkill?.description
+    ? selectedSkill.description.replace(/\s+/g, " ").trim()
+    : "";
 
   return (
     <Box flexDirection="column" gap={1}>
-      <Text dimColor>
+      <Text dimColor wrap="truncate-end">
         焦点: <Text color="cyan">{focusPane === "skills" ? "左侧 Skills" : "右侧 Agents"}</Text>{" "}
         | 默认模式: <Text color="magenta">{defaultMode}</Text> |{" "}
-        <Text color="cyan">←/→/Enter</Text> 切栏 | <Text color="cyan">Space</Text> 挂载/移除 |{" "}
-        <Text color="cyan">m</Text> 切换 symlink/copy | <Text color="cyan">i</Text> 收纳入库
+        <Text color="cyan">←/→/Enter</Text> 切栏 | <Text color="cyan">[/]/PgUp/PgDn</Text> 翻页 |{" "}
+        <Text color="cyan">Space</Text> 挂载/移除 | <Text color="cyan">m</Text> 切换模式 |{" "}
+        <Text color="cyan">i</Text> 收纳入库
       </Text>
 
       {skills.length === 0 ? (
@@ -201,13 +219,16 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
           {/* Left Skills List */}
           <Box
             flexDirection="column"
-            width={40}
+            width={44}
+            flexShrink={0}
+            height={paneHeight}
+            overflow="hidden"
             borderStyle="round"
             borderColor={focusPane === "skills" ? "cyan" : "gray"}
             paddingX={1}
           >
-            <Text bold color={focusPane === "skills" ? "cyan" : "white"}>
-              Skills ({safeSkillIdx + 1}/{skills.length})
+            <Text bold color={focusPane === "skills" ? "cyan" : "white"} wrap="truncate-end">
+              Skills ({safeSkillIdx + 1}/{skills.length}) · 第 {skillPage + 1}/{skillTotalPages} 页
             </Text>
             {visibleSkills.map((s, idx) => {
               const actualIdx = skillStart + idx;
@@ -216,6 +237,7 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
               return (
                 <Text
                   key={s.id}
+                  wrap="truncate-end"
                   color={isSelected ? "black" : s.inCentralHub ? "white" : "yellow"}
                   backgroundColor={isSelected ? "cyan" : undefined}
                 >
@@ -230,17 +252,20 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
           <Box
             flexDirection="column"
             flexGrow={1}
+            flexBasis={0}
+            height={paneHeight}
+            overflow="hidden"
             borderStyle="round"
             borderColor={focusPane === "agents" ? "cyan" : "gray"}
             paddingX={1}
           >
             {selectedSkill ? (
               <>
-                <Text bold color="cyan">
+                <Text bold color="cyan" wrap="truncate-end">
                   {selectedSkill.name || selectedSkill.id}{" "}
                   <Text color="gray">[{selectedSkill.id}]</Text>
                 </Text>
-                <Text>
+                <Text wrap="truncate-end">
                   仓库状态:{" "}
                   {selectedSkill.inCentralHub ? (
                     <Text color="green">已入库 (~/.agent-locator/skills)</Text>
@@ -254,18 +279,21 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
                     <Text color="red">缺失</Text>
                   )}
                 </Text>
-                {selectedSkill.description && (
-                  <Text dimColor>简介: {selectedSkill.description}</Text>
+                {normalizedDesc && (
+                  <Text dimColor wrap="truncate-end">
+                    简介: {normalizedDesc}
+                  </Text>
                 )}
 
-                <Box marginTop={1} flexDirection="column">
-                  <Text bold color={focusPane === "agents" ? "cyan" : "white"}>
-                    目标 Agents 分发状态 ({agents.length} 已安装):
+                <Box marginTop={1} flexDirection="column" overflow="hidden">
+                  <Text bold color={focusPane === "agents" ? "cyan" : "white"} wrap="truncate-end">
+                    目标 Agents 分发状态 ({agents.length === 0 ? 0 : safeAgentIdx + 1}/{agents.length} · 第 {agentPage + 1}/{agentTotalPages} 页):
                   </Text>
                   {agents.length === 0 ? (
                     <Text dimColor>  未检测到已安装的 Agent</Text>
                   ) : (
-                    agents.map((agent, idx) => {
+                    visibleAgents.map((agent, visibleIdx) => {
+                      const idx = agentStart + visibleIdx;
                       const placement = selectedSkill.placements.find(
                         (p) => p.agentKey === agent.key
                       );
@@ -284,6 +312,7 @@ export const SkillsMatrixView: React.FC<SkillsMatrixViewProps> = ({
                       return (
                         <Text
                           key={agent.key}
+                          wrap="truncate-end"
                           color={isSelected ? "black" : undefined}
                           backgroundColor={isSelected ? "cyan" : undefined}
                         >

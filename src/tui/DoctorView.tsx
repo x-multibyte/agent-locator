@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Text, useInput, useStdin } from "ink";
+import { Box, Text, useInput, useStdin, useStdout } from "ink";
 import {
   importSkill,
   runDoctor,
@@ -15,8 +15,6 @@ interface DoctorViewProps {
   onStatus: (msg: string) => void;
 }
 
-const WINDOW_SIZE = 12;
-
 export const DoctorView: React.FC<DoctorViewProps> = ({
   doctor,
   isActive,
@@ -24,8 +22,13 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
   onStatus,
 }) => {
   const { isRawModeSupported } = useStdin();
+  const { stdout } = useStdout();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [busy, setBusy] = useState(false);
+
+  const termRows = stdout?.rows ?? 28;
+  const paneHeight = Math.max(14, Math.min(22, termRows - 14));
+  const windowSize = Math.max(6, paneHeight - 3);
 
   const issues = doctor.issues;
   const safeIdx = issues.length === 0 ? 0 : Math.min(selectedIndex, issues.length - 1);
@@ -58,6 +61,14 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
           setSelectedIndex((prev) => (prev + 1) % issues.length);
           return;
         }
+        if (key.pageUp || input === "[") {
+          setSelectedIndex((prev) => Math.max(0, prev - windowSize));
+          return;
+        }
+        if (key.pageDown || input === "]") {
+          setSelectedIndex((prev) => Math.min(issues.length - 1, prev + windowSize));
+          return;
+        }
       }
 
       if (input === "i" && selectedIssue?.issueType === "unmanaged_skill" && selectedIssue.agentKey) {
@@ -79,16 +90,15 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
     { isActive: isActive && Boolean(isRawModeSupported) }
   );
 
-  const start = Math.max(
-    0,
-    Math.min(safeIdx - Math.floor(WINDOW_SIZE / 2), Math.max(0, issues.length - WINDOW_SIZE))
-  );
-  const visibleIssues = issues.slice(start, start + WINDOW_SIZE);
+  const currentPage = Math.floor(safeIdx / windowSize);
+  const totalPages = Math.max(1, Math.ceil(issues.length / windowSize));
+  const start = currentPage * windowSize;
+  const visibleIssues = issues.slice(start, start + windowSize);
 
   return (
     <Box flexDirection="column" gap={1}>
-      <Text dimColor>
-        <Text color="cyan">↑/↓</Text> 选择问题 | <Text color="cyan">i</Text> 收纳选中的野生 Skill |{" "}
+      <Text dimColor wrap="truncate-end">
+        <Text color="cyan">↑/↓/[/]/PgUp/PgDn</Text> 翻页 | <Text color="cyan">i</Text> 收纳选中的野生 Skill |{" "}
         <Text color="cyan">s</Text> 同步偏移副本 | <Text color="cyan">f</Text> 一键全部修复
       </Text>
 
@@ -101,12 +111,14 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
       ) : (
         <Box
           flexDirection="column"
+          height={paneHeight}
+          overflow="hidden"
           borderStyle="round"
           borderColor="yellow"
           paddingX={1}
         >
-          <Text bold color="yellow">
-            发现 {issues.length} 个待处理项 ({safeIdx + 1}/{issues.length}):
+          <Text bold color="yellow" wrap="truncate-end">
+            发现 {issues.length} 个待处理项 ({safeIdx + 1}/{issues.length} · 第 {currentPage + 1}/{totalPages} 页):
           </Text>
           {visibleIssues.map((issue, idx) => {
             const actualIdx = start + idx;
@@ -120,6 +132,7 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
             return (
               <Text
                 key={`${issue.issueType}-${issue.path}-${actualIdx}`}
+                wrap="truncate-end"
                 color={isSelected ? "black" : undefined}
                 backgroundColor={isSelected ? "cyan" : undefined}
               >
